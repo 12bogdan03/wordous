@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}Редагування завдання #{{ task.id }}{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/uk.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row p-2 my-3">
+            <div class="col-md-10">
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="row m-3">
+                            <h4>Редагування завдання #{{ task.id }}</h4>
+                            <small class="ml-2 text-muted align-self-center"><i class="far fa-clock"></i> {{ task.created }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="d-flex flex-wrap">
+                    <div class="d-inline-flex m-3 mr-5">
+                        <p class="pr-5"><strong>Тип:</strong></p>
+                        <p>
+                            <span class="badge badge-light">{{ task.get_kind_display }}
+                                {% if task.kind == 'ed' %}
+                                    <i class="fas fa-pencil-alt"></i>
+                                {% else %}
+                                    <i class="fas fa-exchange-alt"></i>
+                                {% endif %}
+                            </span>
+                        </p>
+                    </div>
+
+                    {% if request.user == task.creator %}
+                        <div class="d-inline-flex m-3 mr-5">
+                            <p class="pr-5"><strong>Статус:</strong></p>
+                            <p>{{ task.get_status_display }}</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="d-inline-flex m-3 mr-5">
+                        <p class="pr-5"><strong>Створив:</strong></p>
+                        <p>{{ task.creator.first_name }} {{ task.creator.last_name }}</p>
+                    </div>
+
+                    <div class="d-inline-flex m-3 mr-5">
+                        <p class="pr-5"><strong>Мова оригіналу:</strong></p>
+                        <p><span class="badge badge-secondary">{{ task.language }}</span></p>
+                    </div>
+
+                    {% if task.translation_language %}
+                        <div class="d-inline-flex m-3 mr-5">
+                            <p class="pr-5"><strong>Мова перекладу:</strong></p>
+                            <p><span class="badge badge-info">{{ task.translation_language }}</span></p>
+                        </div>
+                    {% endif %}
+
+                    <div class="d-inline-flex m-3 mr-5">
+                        <p class="pr-5"><strong>Виконавець:</strong></p>
+                        {% if task.executor %}
+                            <a href="{% url 'accounts:executor_detail' task.executor.id %}">{{ task.executor.first_name }} {{ task.executor.last_name }}</a>
+                        {% else %}
+                            немає.
+                        {% endif %}
+                    </div>
+                </div>
+
+                <hr>
+
+                <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label for="{{ form.deadline.id_for_label }}" class="col-sm-2 col-form-label">
+                                            {{ form.deadline.label_tag }}
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group mb-3 w-75">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="deadline-addon"><i class="far fa-calendar-alt"></i></span>
+                                                </div>
+                                                {% render_field form.deadline class="form-control" aria-label="deadline" aria-describedby="deadline-addon" %}
+                                            </div>
+
+                                            {% if form.deadline.help_text %}
+                                                <small class="form-text text-muted">{{ form.deadline.help_text|safe }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label for="{{ form.estimated_price.id_for_label }}" class="col-sm-2 col-form-label">
+                                            {{ form.estimated_price.label_tag }}
+                                        </label>
+                                        <div class="col-sm-10">
+                                            {% if form.estimated_price.errors %}
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="price-addon">&#8372;</span>
+                                                    </div>
+                                                    {% render_field form.estimated_price class="form-control is-invalid" aria-label="price" aria-describedby="price-addon" %}
+                                                </div>
+                                                {% for error in form.estimated_price.errors %}
+                                                    <div class="invalid-field">
+                                                        {{ error }}
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="price-addon">&#8372;</span>
+                                                    </div>
+                                                    {% render_field form.estimated_price class="form-control" aria-label="price" aria-describedby="price-addon" %}
+                                                </div>
+                                            {% endif %}
+
+                                            {% if form.estimated_price.help_text %}
+                                                <small class="form-text text-muted">{{ form.estimated_price.help_text|safe }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label for="{{ form.file.id_for_label }}" class="col-sm-2 col-form-label">
+                                            {{ form.file.label_tag }}
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <label class="btn btn-outline-secondary" for="file-selector">
+                                                <input type="file" name="file" style="display:none;" id="file-selector">
+                                                Вибрати <i class="far fa-folder-open"></i>
+                                            </label>
+                                            <span class='label label-info' id="upload-file-info"></span>
+                                            {% if form.file.errors %}
+                                                {% for error in form.file.errors %}
+                                                    <div class="invalid-field">
+                                                        {{ error }}
+                                                    </div>
+                                                {% endfor %}
+                                            {% endif %}
+                                            {% if form.file.help_text %}
+                                                <small class="form-text text-muted">
+                                                    {{ form.file.help_text|safe }}
+                                                </small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-inline-flex">
+                                        <p class="pr-5">Наразі:</p>
+                                        <a href="{{ task.file.url }}">
+                                            {{ task.file_name }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <label for="{{ form.description.id_for_label }}" class="col-sm-1 col-form-label">
+                                            {{ form.description.label_tag }}
+                                        </label>
+                                        <div class="col-sm-11">
+                                            {% render_field form.description class="form-control" %}
+                                            {% if form.description.help_text %}
+                                                <small class="form-text text-muted">{{ form.description.help_text|safe }}</small>
+                                            {% endif %}
+                                            <small class="form-text text-muted">Залишилось символів:
+                                                <span id="remaining-chars" class="text-info"></span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <button class="btn btn-success btn-lg mx-auto" type="submit">Зберегти</button>
+                    </div>
+                </form>
+
+            </div>
+
+
+            <div class="col-md-2 bg-secondary">
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function(){
+            // file upload
+            $('#file-selector').on('change', function() {
+                var fileName = $(this).val().split('\\').pop();
+                $('#upload-file-info').html(fileName);
+            });
+
+            // characters remaining countdown
+            var maxLength = $("#id_description").attr("maxlength");
+            $('#remaining-chars').text(maxLength);
+            $("#id_description").keyup(function() {
+                var length = $(this).val().length;
+                var length = maxLength-length;
+                $('#remaining-chars').text(length);
+            });
+
+            flatpickr("#id_deadline", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                minDate: "today",
+                time_24hr: true,
+                locale: 'uk'
+            });
+        });
+    </script>
+{% endblock %}

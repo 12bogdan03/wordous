@@ -1,0 +1,59 @@
+{% load widget_tweaks %}
+
+<footer class="footer p-2">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 d-inline-flex justify-content-center justify-content-sm-start">
+                <small class="my-2">&copy; 2018 wordous.me Всі права захищено</small>
+            </div>
+            <div class="col-sm-6 d-inline-flex justify-content-center justify-content-sm-end">
+                <button type="button" class="btn btn-outline-dark" data-toggle="modal"
+                        data-target="#contactFormModal">
+                    Зв'язатися з нами <i class="far fa-envelope"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div class="modal bd-example-modal-lg fade" id="contactFormModal" tabindex="-1" role="dialog" aria-labelledby="contactFormModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Контактна форма</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form action="{% url 'feedback:send_feedback' %}" method="POST" id="feedback-form">
+                <div class="modal-body" id="feedback-body">
+                    <div class="form-group">
+                        <label for="{{ feedback_form.subject.id_for_label }}">
+                            {{ feedback_form.subject.label_tag }}
+                        </label>
+                        {% render_field feedback_form.subject class="custom-select" %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ feedback_form.from_email.id_for_label }}">
+                            {{ feedback_form.from_email.label_tag }}
+                        </label>
+                        {% render_field feedback_form.from_email class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ feedback_form.message.id_for_label }}">
+                            {{ feedback_form.message.label_tag }}
+                        </label>
+                        {% render_field feedback_form.message class="form-control" %}
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Відміна</button>
+                    <button type="submit" class="btn btn-primary">Надіслати <i class="far fa-paper-plane"></i></button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

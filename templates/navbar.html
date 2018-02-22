@@ -1,0 +1,87 @@
+{% load accounts_extras %}
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-violet box-shadow">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">Wordous</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            {% with url_name=request.resolver_match.url_name %}
+                <div class="navbar-nav mr-auto">
+                    {% if request.user.is_authenticated %}
+                        <a class="nav-item nav-link bordered text-center {% if url_name == 'task_list' %}active{% endif %}"
+                           href="{% url 'tasks:task_list' %}">Завдання</a>
+                    {% endif %}
+                    <a class="nav-item nav-link bordered text-center {% if url_name == 'faq' %}active{% endif %}"
+                       href="{% url 'faq' %}">FAQ</a>
+                </div>
+            {% endwith %}
+
+            <div class="navbar-nav ml-auto">
+                {% if request.user.is_authenticated %}
+                    <div class="nav-item dropdown">
+                        <a class="nav-link text-center dropdown-toggle mr-lg-3" id="notificationsDropdown" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-fw fa-bell fa-lg"></i>
+                            <span class="d-md-none">Сповіщення</span>
+                            <span class="indicator text-warning d-lg-block">
+                                {#filled by javascript when new notifications appear#}
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right scrollable-dropdown" id="notificationsMenu" aria-labelledby="notificationsDropdown">
+                            <h6 class="dropdown-header py-0"></h6>
+                            <div class=""></div>
+                            <div id="notifications-list">
+                                <small class="dropdown-item text-muted text-center">Нових сповіщень немає</small>
+                            </div>
+
+                            <a class="dropdown-item text-center small" href="{% url 'notifications:notification_list' %}">
+                                <i class="fas fa-history"></i> Переглянути всі сповіщення
+                            </a>
+                        </div>
+                    </div>
+
+                    {% if request.user|is_client %}
+                        <a class="nav-item btn btn-outline-light my-2 my-md-0 mr-md-3" role="button" href="{% url "tasks:task_create" %}">
+                            <i class="fas fa-plus-square"></i> Нове завдання
+                        </a>
+                    {% endif %}
+
+                    <div class="nav-item dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle w-100" type="button" id="dropdownProfileButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="far fa-user-circle"></i> Профіль
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownProfileButton">
+                            <a class="dropdown-item text-center" href="{% url 'accounts:dashboard' %}">
+                                <i class="fas fa-tasks fa-fw"></i>
+                                Мої завдання
+                            </a>
+                            <a class="dropdown-item text-center" href="{% url 'accounts:edit' %}">
+                                <i class="fas fa-cog fa-fw"></i>
+                                Налаштування
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-center" href="{% url "accounts:logout" %}">
+                                <i class="fas fa-sign-out-alt fa-fw"></i>
+                                Вийти
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a class="nav-item btn btn-outline-light my-2 my-md-0 mr-md-3" role="button" href="{% url "accounts:login" %}">
+                        Вхід <i class="fas fa-sign-in-alt"></i>
+                    </a>
+
+                    <a class="nav-item btn btn-outline-light" role="button" href="{% url "accounts:register" %}">
+                        Реєстрація <i class="fas fa-user-plus"></i>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

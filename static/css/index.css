@@ -1,0 +1,144 @@
+.masthead {
+    position: relative;
+    background: #343a40 url("/static/img/bg-main.jpeg") no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    padding-top: 8rem;
+    padding-bottom: 8rem
+}
+
+.masthead .overlay {
+    position: absolute;
+    background-color: #212529;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    opacity: .3
+}
+
+.masthead h1 {
+    font-size: 2rem
+}
+
+@media (min-width: 768px) {
+    .masthead {
+        padding-top:12rem;
+        padding-bottom: 12rem
+    }
+
+    .masthead h1 {
+        font-size: 3rem
+    }
+}
+
+.features-icons {
+    padding-top: 7rem;
+    padding-bottom: 7rem
+}
+
+.features-icons .features-icons-item {
+    max-width: 20rem;
+}
+
+.features-icons .features-icons-item .features-icons-icon {
+    height: 7rem;
+    font-size: 1rem;
+    transition: ease-in 0.1s;
+}
+
+
+.features-icons .features-icons-item .features-icons-icon:hover {
+    font-size: 1.1rem;
+}
+
+
+
+span.brand {
+    font-family: 'Supermercado One', cursive;
+    font-size: 130%;
+}
+
+.content-paralax {
+    padding: 7rem 0;
+    margin-bottom: 0;
+    color: inherit;
+    font-weight: bold;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('/static/img/credit-cards.jpeg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+blockquote {
+    border:none;
+    font-family:  Georgia, "Times New Roman", Times, serif;
+    quotes: "\201C""\201D""\2018""\2019";
+}
+blockquote h2:before {
+    content: open-quote;
+    font-weight: bold;
+    font-size: 2.5rem;
+    color:#190061;
+}
+blockquote h2:after {
+    content: close-quote;
+    font-weight: bold;
+    font-size: 2.5rem;
+    color:#190061;
+
+}
+
+@-webkit-keyframes pulse {
+    25% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+    75% {
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+    }
+}
+
+@keyframes pulse {
+    25% {
+        -webkit-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+    }
+    75% {
+        -webkit-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        transform: scale(0.9);
+    }
+}
+
+.pulse {
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+}
+
+.pulse:hover {
+    -webkit-animation-name: pulse;
+    animation-name: pulse;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+}
+
+.bg-final-image-full {
+    padding: 6rem 0;
+    background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url('/static/img/work.jpeg') no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}

@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% load static %}
+{% load accounts_extras %}
+{% load widget_tweaks %}
+
+{% block title %}Завдання #{{ task.id }}{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row p-2 my-3">
+            <div class="col-md-10">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="row m-3">
+                            <h2>#{{ task.id }} <span class="badge badge-secondary">
+                                    {% if task.estimated_price %}
+                                        {{ task.estimated_price }} &#8372;
+                                    {% else %}
+                                        вартість не вказано
+                                    {% endif %}</span>
+                            </h2>
+                            <small class="ml-2 text-muted align-self-center"><i class="far fa-clock"></i> {{ task.created }}</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        {% if request.user == task.creator and task.status == 'nw' %}
+                            <div class="d-flex justify-content-end">
+                                <a class="btn btn-info btn-sm align-self-start m-1" href="{% url 'tasks:task_update' task.id %}" role="button">
+                                    Редагувати <i class="far fa-edit"></i>
+                                </a>
+                                <a role="button" class="btn btn-danger btn-sm align-self-start m-1" href="#" data-toggle="modal" data-target="#confirmDeleteModal">
+                                    Видалити <i class="far fa-trash-alt"></i>
+                                </a>
+                            </div>
+                            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Підтвердження</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Впевнені, що хочете видалити це завдання?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Відмінити</button>
+                                            <form action="{% url 'tasks:task_delete' task.id %}" method="post">{% csrf_token %}
+                                                <button type="submit" class="btn btn-danger">Видалити</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% elif request.user|is_worker and task.status == 'nw' %}
+                            <form action="{% url 'tasks:become_task_executor' task.id %}" method="post">{% csrf_token %}
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-success align-self-start m-1" type="submit">
+                                        Виконати <i class="far fa-arrow-alt-circle-right"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        {% elif request.user == task.creator and task.status == 'wff' %}
+                            <div class="d-flex justify-content-end">
+                                <a class="btn btn-success align-self-start" role="button"
+                                   href="{% url 'payment:payment' task.pk %}">
+                                    Оплатити <i class="far fa-credit-card"></i>
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <hr>
+
+
+                <div class="card m-3">
+                    <div class="card-body">
+
+                        <div class="d-inline-flex m-3">
+                            <p class="pr-4"><strong>Тип:</strong></p>
+                            <p>
+                                    <span class="badge badge-light">{{ task.get_kind_display }}
+                                        {% if task.kind == 'ed' %}
+                                            <i class="fas fa-pencil-alt"></i>
+                                        {% else %}
+                                            <i class="fas fa-exchange-alt"></i>
+                                        {% endif %}
+                                    </span>
+                            </p>
+                        </div>
+
+                        {% if request.user == task.creator %}
+                            <div class="d-inline-flex m-3">
+                                <p class="pr-4"><strong>Статус:</strong></p>
+                                <p>{{ task.get_status_display }}</p>
+                            </div>
+                        {% endif %}
+
+                        <div class="d-inline-flex m-3">
+                            <p class="pr-4"><strong>Створив:</strong></p>
+                            <p>{{ task.creator.first_name }} {{ task.creator.last_name }}</p>
+                        </div>
+
+                        <div class="d-inline-flex m-3">
+                            <p class="pr-4"><strong>Мова оригіналу:</strong></p>
+                            <p><span class="badge badge-secondary">{{ task.language }}</span></p>
+                        </div>
+
+
+
+                        {% if task.translation_language %}
+                            <div class="d-inline-flex m-3">
+                                <p class="pr-4"><strong>Мова перекладу:</strong></p>
+                                <p><span class="badge badge-info">{{ task.translation_language }}</span></p>
+                            </div>
+                        {% endif %}
+
+                        <div class="d-inline-flex m-3">
+                            <p class="pr-4"><strong>Дедлайн <i class="fas fa-stopwatch"></i>:</strong></p>
+                            <p {% if task.is_expired %}class="text-danger"{% endif %}>{{ task.deadline }}</p>
+                        </div>
+
+
+
+                        <div class="d-inline-flex m-3">
+                            <p class="pr-4"><strong>Виконавець:</strong></p>
+                            {% if task.executor %}
+                                <a href="{% url 'accounts:executor_detail' task.executor.id %}">{{ task.executor.first_name }} {{ task.executor.last_name }}</a>
+                            {% else %}
+                                немає.
+                            {% endif %}
+                        </div>
+                        <div class="d-flex m-3">
+
+                            <p class="pr-4"><strong>Опис:</strong></p>
+                            {% if task.description %}
+                                <div class="card w-100">
+                                    <div class="card-body">
+                                        {{ task.description|linebreaks }}
+                                    </div>
+                                </div>
+                            {% else %}
+                                не вказано.
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-inline-flex flex-wrap">
+                            <h5 class="pr-4">Файл: </h5>
+                            <a href="{{ task.file.url }}" style="word-break: break-all;">
+                                {{ task.file_name }} <i class="fas fa-cloud-download-alt"></i>
+                            </a>
+                        </div>
+
+                        {% if task.status == 'dn' %}
+                            <hr>
+                            <div class="d-inline-flex flex-wrap">
+                                <h5 class="pr-4">Файл з готовим завданням: </h5>
+                                <a href="{{ solution_file.url }}" class="btn btn-success btn-sm">
+                                    Завантажити <i class="fas fa-cloud-download-alt"></i>
+                                </a>
+                            </div>
+                        {% elif task.status == 'wff' %}
+                            <hr>
+                            <div class="d-inline-flex flex-wrap">
+                                <h5 class="pr-4">Прев'ю готового завдання: </h5>
+                                <div class="card w-100">
+                                    <div class="card-body">
+                                        {{ task.solution_preview|linebreaks|truncatechars:500 }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <hr>
+                <form action="{% url 'tasks:comment_create' task.id %}" method="post">{% csrf_token %}
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            {% render_field comment_form.text class='form-control mb-2' rows='4' placeholder='Текст коментаря' %}
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <button class="btn btn-primary ml-auto mr-3" type="submit">
+                            Коментувати <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+
+                {% with comments.count as total_comments %}
+                    <h4 class="border-bottom border-gray pb-3 mb-3">
+                        <i class="far fa-comments"></i> Коментарів: {{ total_comments }}
+                    </h4>
+                {% endwith %}
+
+                {% for comment in comments %}
+                    <div class="my-3 pl-3 pb-3 pr-3 pt-1 bg-white rounded box-shadow">
+                        <div class="media">
+                            <img alt="user photo" width="35" height="35" class="mr-2 mt-3 rounded align-self-start"
+                                   src="{% if comment.creator|is_worker %}
+                                            {{ comment.creator.worker_profile.get_photo }}
+                                        {% else %}
+                                            {% static 'img/client_avatar.png' %}
+                                        {% endif %}" />
+                            <div class="media-body pb-1">
+
+                                <p class="ml-auto my-0 pt-0 text-right">
+                                    <span class="badge badge-pill badge-light">
+                                        <i class="far fa-clock"></i> {{ comment.created }}
+                                    </span>
+                                </p>
+
+                                <p>
+                                    <strong>
+                                        <i class="far fa-user"></i> {{ comment.creator.first_name }} {{ comment.creator.last_name }}
+                                        {% if comment.creator == task.creator %}
+                                            <span class="badge badge-secondary">власник</span>
+                                        {% elif comment.creator == task.executor %}
+                                            <span class="badge badge-success">виконавець</span>
+                                        {% endif %}
+                                    </strong>
+                                </p>
+
+                                {{ comment.text|linebreaks }}
+                            </div>
+                        </div>
+
+                    </div>
+                {% empty %}
+                    <p class="text-center">Поки коментарів немає.</p>
+                {% endfor %}
+            </div>
+
+
+            <div class="col-md-2 bg-secondary">
+            </div>
+        </div>
+    </div>
+{% endblock %}

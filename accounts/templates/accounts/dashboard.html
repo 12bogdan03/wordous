@@ -1,0 +1,29 @@
+{% extends "accounts/base_accounts.html" %}
+{% load accounts_extras %}
+
+{% block title %}Сторінка користувача{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="py-4">Мої завдання</h1>
+        <div class="row">
+            {% if request.user|is_worker %}
+                {% include 'accounts/dashboard_worker.html' %}
+            {% else %}
+                {% include 'accounts/dashboard_client.html' %}
+            {% endif %}
+        <small class="text-muted text-center">
+            Готові завдання автоматично видаляються через 30 днів після зміни їх статусу на "Готово".
+        </small>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+{% endblock %}

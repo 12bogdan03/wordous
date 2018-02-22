@@ -1,0 +1,7 @@
+{% autoescape off %}
+    Вітаємо {{ user.firstname }} {{ user.lastname }} !
+
+    Перейдіть за цим посиланням для завершення реєстрації:
+
+    {{ protocol }}://{{ domain }}{% url 'accounts:account_activation_confirm' uidb64=uid token=token %}
+{% endautoescape %}

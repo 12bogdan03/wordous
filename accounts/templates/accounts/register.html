@@ -1,0 +1,324 @@
+{% extends "accounts/base_accounts.html" %}
+{% load static %}
+
+{% load widget_tweaks %}
+
+{% block title %}Реєстрація{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static "accounts/css/accounts.css" %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <h2 class="py-4 text-center">Реєстрація</h2>
+
+        {% if user_form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for error in user_form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if profile_form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for error in profile_form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form action="" method="post" enctype="multipart/form-data"
+              data-validate-username-url="{% url 'accounts:validate_username' %}"
+              data-validate-email-url="{% url 'accounts:validate_email' %}">{% csrf_token %}
+
+            <div class="row">
+                <div class="col-md-6">
+
+                    <div class="form-group row">
+                        <label for="{{ user_form.username.id_for_label }}" class="col-sm-4 col-form-label">
+                            {{ user_form.username.label_tag }}
+                        </label>
+                        <div class="col-sm-8">
+                            {% if user_form.username.errors %}
+                                {% render_field user_form.username class="form-control is-invalid" %}
+                                {% for error in user_form.username.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {% render_field user_form.username class="form-control" %}
+                            {% endif %}
+
+                            {% if user_form.username.help_text %}
+                                <small class="form-text text-muted">
+                                    {{ user_form.username.help_text|safe }}
+                                </small>
+                            {% endif %}
+                            <small id="username-not-available" class="form-text text-danger"></small>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="{{ user_form.first_name.id_for_label }}" class="col-sm-4 col-form-label">
+                            {{ user_form.first_name.label_tag }}
+                        </label>
+                        <div class="col-sm-8">
+                            {% if user_form.first_name.errors %}
+                                {% render_field user_form.first_name class="form-control is-invalid" %}
+                                {% for error in user_form.first_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {% render_field user_form.first_name class="form-control" %}
+                            {% endif %}
+
+                            {% if user_form.first_name.help_text %}
+                                <small class="form-text text-muted">
+                                    {{ user_form.first_name.help_text|safe }}
+                                </small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="{{ user_form.last_name.id_for_label }}" class="col-sm-4 col-form-label">
+                            {{ user_form.last_name.label_tag }}
+                        </label>
+                        <div class="col-sm-8">
+                            {% if user_form.last_name.errors %}
+                                {% render_field user_form.last_name class="form-control is-invalid" %}
+                                {% for error in user_form.last_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {% render_field user_form.last_name class="form-control" %}
+                            {% endif %}
+
+                            {% if user_form.last_name.help_text %}
+                                <small class="form-text text-muted">
+                                    {{ user_form.last_name.help_text|safe }}
+                                </small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="{{ user_form.email.id_for_label }}" class="col-sm-4 col-form-label">
+                            {{ user_form.email.label_tag }}
+                        </label>
+                        <div class="col-sm-8">
+                            {% if user_form.email.errors %}
+                                {% render_field user_form.email class="form-control is-invalid" %}
+                                {% for error in user_form.email.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {% render_field user_form.email class="form-control" %}
+                            {% endif %}
+
+                            {% if user_form.email.help_text %}
+                                <small class="form-text text-muted">
+                                    {{ user_form.email.help_text|safe }}
+                                </small>
+                            {% endif %}
+                            <small id="username-not-available" class="form-text text-danger"></small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="form-group row">
+                        <label for="{{ user_form.password1.id_for_label }}" class="col-sm-4 col-form-label">
+                            {{ user_form.password1.label_tag }}
+                        </label>
+                        <div class="col-sm-8">
+                            {% if user_form.password1.errors %}
+                                {% render_field user_form.password1 class="form-control is-invalid" %}
+                                {% for error in user_form.password1.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {% render_field user_form.password1 class="form-control" %}
+                            {% endif %}
+
+                            {% if user_form.password1.help_text %}
+                                <small class="form-text text-muted">
+                                    {{ user_form.password1.help_text|safe }}
+                                </small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div id="passwordMatchError"></div>
+
+                    <div class="form-group row">
+                        <label for="{{ user_form.password2.id_for_label }}" class="col-sm-4 col-form-label">
+                            {{ user_form.password2.label_tag }}
+                        </label>
+                        <div class="col-sm-8">
+                            {% if user_form.password2.errors %}
+                                {% render_field user_form.password2 class="form-control is-invalid" %}
+                                {% for error in user_form.password2.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {% render_field user_form.password2 class="form-control" %}
+                            {% endif %}
+
+                            {% if user_form.password2.help_text %}
+                                <small class="form-text text-muted">
+                                    {{ user_form.password2.help_text|safe }}
+                                </small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="{{ user_form.role.id_for_label }}" class="col-sm-4 col-form-label">
+                            {{ user_form.role.label_tag }}
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="btn-group btn-group-toggle d-flex" data-toggle="buttons">
+                                <label id="Client" class="btn btn-outline-dark active w-100">
+                                    <input type="radio" name="role" value="Client" required id="id_role_0" checked>
+                                    Замовник
+                                </label>
+                                <label id="Worker" class="btn btn-outline-dark w-100">
+                                    <input type="radio" name="role" value="Worker" required id="id_role_1">
+                                    Виконавець
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="profile_form">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="{{ profile_form.languages.id_for_label }}" class="col-sm-4 col-form-label">
+                                {{ profile_form.languages.label_tag }}
+                            </label>
+                            <div class="col-sm-8">
+                                {% render_field profile_form.languages class="form-control" hidden="true" %}
+                                <ul id="langTags" class="tagit ui-widget ui-widget-content ui-corner-all"></ul>
+
+                                {% if profile_form.languages.help_text %}
+                                    <small class="form-text text-muted">
+                                        {{ profile_form.languages.help_text|safe }}
+                                    </small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="{{ profile_form.photo.id_for_label }}" class="col-sm-4 col-form-label">
+                                {{ profile_form.photo.label_tag }}
+                            </label>
+                            <div class="col-sm-8">
+                                <label class="btn btn-outline-secondary" for="file-selector">
+                                    {% render_field profile_form.photo style="display:none;" id="file-selector" %}
+                                    Вибрати <i class="far fa-folder-open"></i>
+                                </label>
+                                <span class='label label-info' id="upload-file-info"></span>
+                                {% if profile_form.photo.errors %}
+                                    {% for error in profile_form.photo.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                {% if profile_form.photo.help_text %}
+                                    <small class="form-text text-muted">
+                                        {{ profile_form.photo.help_text|safe }}
+                                    </small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label for="{{ profile_form.about.id_for_label }}" class="col-sm-2 col-form-label">
+                                {{ profile_form.about.label_tag }}
+                            </label>
+                            <div class="col-sm-10">
+                                {% render_field profile_form.about class="form-control" %}
+                                {% if profile_form.about.help_text %}
+                                    <small class="form-text text-muted">{{ profile_form.about.help_text|safe }}</small>
+                                {% endif %}
+                                <small class="form-text text-muted">Залишилось символів:
+                                    <span id="remaining-chars" class="text-info"></span>
+                                </small>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group row">
+                            <label for="{{ profile_form.card_number.id_for_label }}" class="col-md-4 col-form-label">
+                                {{ profile_form.card_number.label_tag }}
+                            </label>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="card-addon">
+                                            <i class="far fa-credit-card"></i>
+                                        </span>
+                                    </div>
+                                    {% render_field profile_form.card_number class="form-control" aria-describedby="card-addon" %}
+                                </div>
+
+                                {% if profile_form.card_number.help_text %}
+                                    <small class="form-text text-muted">{{ profile_form.card_number.help_text|safe }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row justify-content-center my-3">
+                <button id="registerBtn" class="btn btn-outline-primary btn-lg mt-3 mb-5" type="submit">Зареєструватися</button>
+            </div>
+
+        </form>
+
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="{% static 'js/tag-it.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var languages = {{ languages|safe }};
+    </script>
+    <script src="{% static 'accounts/js/register.js' %}"></script>
+{% endblock %}

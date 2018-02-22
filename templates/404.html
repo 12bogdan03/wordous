@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Помилка 404
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="display-1 my-3 text-center">404</h1>
+        <img src="{% static 'img/404picture.png' %}" class="rounded mx-auto d-block" alt="sad cat">
+        <h3 class="mb-5 text-center">На жаль, цієї сторінки не існує :(</h3>
+        <div class="d-flex">
+            <a href="{% url 'home' %}" role="button" class="btn btn-secondary btn-lg mx-auto">На головну сторінку</a>
+        </div>
+    </div>
+{% endblock %}

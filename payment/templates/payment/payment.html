@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Оплата
+{% endblock %}
+
+{% block content %}
+
+    <div class="mt-4 mx-auto" id="liqpay_checkout"></div>
+    <input name="taskDetailRedirectUrl" value="{% url 'tasks:task_detail' task.id %}" hidden/>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        window.LiqPayCheckoutCallback = function() {
+            LiqPayCheckout.init({
+                data: "{{ data }}",
+                signature: "{{ signature }}",
+                language: "uk",
+                embedTo: "#liqpay_checkout",
+                mode: "embed" // embed || popup,
+            }).on("liqpay.callback", function(data){
+                if (data.status === 'sandbox') {;
+                    var url = $("input[name=taskDetailRedirectUrl]").val();
+                    window.location.replace(url);
+                }
+            }).on("liqpay.ready", function(data){
+                // ready
+            }).on("liqpay.close", function(data){
+                // close
+            });
+        };
+    </script>
+    <script src="//static.liqpay.ua/libjs/checkout.js" async></script>
+{% endblock %}

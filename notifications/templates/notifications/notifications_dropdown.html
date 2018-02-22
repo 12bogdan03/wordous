@@ -1,0 +1,11 @@
+{% for notification in notifications %}
+    <a class="dropdown-item" href="{{ notification.task.get_absolute_url }}">
+        <input type="hidden" name="notification-pk" value="{{ notification.pk }}">
+        <span class="text-success">
+            <strong><i class="fas fa-info fa-fw"></i>{{ notification.title }}</strong>
+        </span>
+        <span class="small float-right text-muted">{{ notification.created|date:"SHORT_DATETIME_FORMAT" }}</span>
+        <div class="dropdown-message small">{{ notification.text }}</div>
+    </a>
+    <div class="dropdown-divider"></div>
+{% endfor %}

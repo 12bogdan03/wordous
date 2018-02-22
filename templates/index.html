@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Wordous{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <header class="masthead text-white text-center">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-9 mx-auto">
+                    <h1 class="mb-5"><span class="brand">Wordous</span> - вирішення проблем із перекладом та редагуванням</h1>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+                    <form>
+                        <div class="form-row">
+                            <div class="col-12 col-md-6 mb-2 mb-md-0">
+                                <a href="{% url 'accounts:register' %}" role="button" class="btn btn-block btn-lg btn-primary">
+                                    Зареєструватися
+                                </a>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <button id="scroll-button" type="button" class="btn btn-block btn-lg btn-outline-secondary">
+                                    Дізнатися більше <i class="fas fa-angle-double-down"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="scroll-to-section" class="features-icons bg-light text-center">
+        <div class="container">
+            <div class="row justify-content-center mb-5">
+                <h2>Для замовників <span class="brand">Wordous</span> це</h2>
+            </div>
+            <div class="row mt-lg-5 pb-5">
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex justify-content-center text-info">
+                            <i class="fas fa-tasks fa-6x"></i>
+                        </div>
+                        <h3>Простота</h3>
+                        <p class="lead mb-0">Надзвичайно легко створюйте та оплачуйте завдання!</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex justify-content-center text-info">
+                            <i class="fas fa-balance-scale fa-6x"></i>
+                        </div>
+                        <h3>Контроль</h3>
+                        <p class="lead mb-0">Ви самі встановлюєте вартість редагування чи перекладу!</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex justify-content-center text-info">
+                            <i class="fas fa-stopwatch fa-6x"></i>
+                        </div>
+                        <h3>Надійність</h3>
+                        <p class="lead mb-0">Обираєте час, до якого завдання повинне бути виконаним!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center my-5">
+                <h2>Для виконавців <span class="brand">Wordous</span> це</h2>
+            </div>
+            <div class="row mt-lg-5">
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex justify-content-center text-info">
+                            <i class="far fa-calendar-check fa-6x"></i>
+                        </div>
+                        <h3>Свобода</h3>
+                        <p class="lead mb-0">Обираєте та виконуєте завдання, коли забажаєте!</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex justify-content-center text-info">
+                            <i class="far fa-credit-card fa-6x"></i>
+                        </div>
+                        <h3>Легкість</h3>
+                        <p class="lead mb-0">Після виконання завдання завантажуєте результат та чекаєте на оплату!</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex justify-content-center text-info">
+                            <i class="far fa-handshake fa-6x"></i>
+                        </div>
+                        <h3>Гнучкість</h3>
+                        <p class="lead mb-0">Домовляйтеся із замовником про вартість виконання завдань!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="content-paralax">
+            <div class="text-center text-white">
+                <h1 class="mb-5">Ніяких відсотків <i class="fas fa-percent"></i></h1>
+                <h4>
+                    Завдання оплачуються банківською картою і кошти відразу переводяться на карту виконавця
+                </h4>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <div class="container-fluid bg-white p-5">
+
+            <div class="d-flex justify-content-center text-warning pb-3 pulse">
+                <i class="far fa-question-circle fa-8x"></i>
+            </div>
+
+            <div class="text-center">
+                <blockquote>
+                    <h2 class="my-2 font-italic">Але чи можу я бути впевненим, що не втрачу свої кошти?</h2>
+                </blockquote>
+                <hr>
+                <h3>
+                    Звісно! Після виконання завдання Вам відразу доступно ~10% результату.
+                    Перед оплатою Ви маєте змогу переконатися, що завдання виконане!
+                </h3>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-final-image-full">
+        <div class="d-flex justify-content-center align-items-center" style="height: 15rem">
+            <a href="{% url 'accounts:register' %}" role="button" class="btn px-5 py-3 btn-lg btn-primary">
+                Зареєструватися
+            </a>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function (){
+            $("#scroll-button").click(function (){
+                $('html, body').animate({
+                    scrollTop: $("#scroll-to-section").offset().top
+                }, 1000);
+            });
+        });
+    </script>
+{% endblock %}

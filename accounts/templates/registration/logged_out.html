@@ -1,0 +1,13 @@
+{% extends "accounts/base_accounts.html" %}
+
+{% block title %}Вихід{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="jumbotron mt-4">
+            <h5>Ви вийшли зі свого профілю.
+                <a href="{% url "accounts:login" %}">Увійти <i class="fas fa-sign-in-alt"></i></a> ще раз?
+            </h5>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "accounts/base_accounts.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}Вхід{% endblock %}
+
+{% block content %}
+    <div class="container my-5 pt-3">
+        <div class="row">
+            <div class="col-md-4 mx-auto">
+
+                <h2 class="mb-3 text-center">Вхід</h2>
+
+                <form action="{% url 'accounts:login' %}" method="post">{% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            <p>Введені дані невірні. Спробуйте ще раз або
+                                скористайтеся формою для відновлення пароля.</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group mt-5">
+                        {{ form.username|attr:"class:form-control" }}
+                        <label class="form-control-placeholder" for="{{ form.username.id_for_label }}">Email або логін</label>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.password|attr:"class:form-control" }}
+                        <label class="form-control-placeholder" for="{{ form.password.id_for_label }}">Пароль</label>
+                    </div>
+
+                    <input type="hidden" name="next" value="{{ next }}" />
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Увійти</button>
+                </form>
+
+                <div class="btn-group btn-group-justified d-flex pt-5" role="group">
+                    <button data-toggle="modal" data-target="#forgotPasswordModal" class="btn btn-outline-secondary w-100">
+                        Забули пароль?
+                    </button>
+                    <a href="{% url "accounts:register" %}" role="button" class="btn btn-outline-secondary w-100">Реєстрація</a>
+                </div>
+
+                <div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content bg-light">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Забули пароль?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center">
+                                    <i class="fas fa-unlock-alt fa-5x"></i>
+                                </div>
+                                <p class="text-center mt-3">Введіть Ваш email і ми відправимо лист для відновлення пароля.</p>
+                                <form action="{% url 'accounts:password_reset' %}" method="post">{% csrf_token %}
+                                    <div class="input-group input-group-lg my-5">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="email-addon"><i class="fas fa-at"></i></span>
+                                        </div>
+                                        <input type="email" id="id_email" name="email" class="form-control"
+                                               placeholder="Email" aria-label="Email"
+                                               aria-describedby="email-addon">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block mt-4">Відновити пароль</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

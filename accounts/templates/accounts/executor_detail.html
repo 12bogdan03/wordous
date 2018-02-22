@@ -1,0 +1,33 @@
+{% extends "accounts/base_accounts.html" %}
+
+
+{% block title %}{{ user.first_name }} {{ user.last_name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <img src="{{ user.worker_profile.get_photo }}" id="profile-photo" class="img-thumbnail mx-auto d-block"
+                     width="200" height="200" alt="profile photo" />
+            </div>
+            <div class="col-md-8">
+                <h3 class="my-2">{{ user.first_name }} {{ user.last_name }}</h3>
+
+                <hr>
+
+                <p><strong>Мови:</strong>
+                    {% for lang in languages %}
+                        <span class="badge badge-secondary">{{ lang }}</span>
+                    {% endfor %}
+                </p>
+
+                <p><strong>Про себе:</strong></p>
+                <div class="card">
+                    <div class="card-body">
+                        {{ user.worker_profile.about|linebreaks }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

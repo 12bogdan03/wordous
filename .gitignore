@@ -1,0 +1,6 @@
+__pycache__/
+media/
+celerybeat-schedule
+.env
+.venv
+.idea

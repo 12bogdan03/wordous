@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Нове завдання{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/uk.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="py-3">Нове завдання</h2>
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.kind.id_for_label }}" class="mr-3 col-form-label">
+                            {{ form.kind.label_tag }}
+                        </label>
+
+                        <div id="edit-choice" class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" name="kind" value="ed" id="id_kind_0" class="custom-control-input" required="">
+                            <label class="custom-control-label" for="id_kind_0">
+                                Редагування
+                            </label>
+                        </div>
+                        <div id="translate-choice" class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" name="kind" value="tr" id="id_kind_1" class="custom-control-input" required="">
+                            <label class="custom-control-label" for="id_kind_1">
+                                Переклад
+                            </label>
+                        </div>
+                        {% if form.kind.help_text %}
+                            <small class="form-text text-muted">
+                                {{ form.kind.help_text|safe }}
+                            </small>
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div id="translation-language-field" class="form-group row">
+                        <label for="{{ form.translation_language.id_for_label }}" class="col-sm-4 col-form-label">
+                            {{ form.translation_language.label_tag }}
+                        </label>
+                        <div class="col-sm-8">
+                            {% render_field form.translation_language hidden="true" %}
+                            <ul id="translationLangTags" class="tagit ui-widget ui-widget-content ui-corner-all"></ul>
+
+                            {% if form.translation_language.help_text %}
+                                <small class="form-text text-muted">
+                                    {{ form.translation_language.help_text|safe }}
+                                </small>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="{{ form.language.id_for_label }}" class="col-sm-4 col-form-label">
+                            {{ form.language.label_tag }}
+                        </label>
+                        <div class="col-sm-8">
+                            {% render_field form.language hidden="true" %}
+                            <ul id="originLangTags" class="tagit ui-widget ui-widget-content ui-corner-all"></ul>
+
+                            {% if form.language.help_text %}
+                                <small class="form-text text-muted">
+                                    {{ form.language.help_text|safe }}
+                                </small>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="{{ form.deadline.id_for_label }}" class="col-sm-2 col-form-label">
+                            {{ form.deadline.label_tag }}
+                        </label>
+                        <div class="col-sm-10">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="deadline-addon"><i class="far fa-calendar-alt"></i></span>
+                                </div>
+                                {% render_field form.deadline class="form-control" aria-label="deadline" aria-describedby="deadline-addon" %}
+                            </div>
+
+                            {% if form.deadline.help_text %}
+                                <small class="form-text text-muted">{{ form.deadline.help_text|safe }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="{{ form.file.id_for_label }}" class="col-sm-4 col-form-label">
+                            {{ form.file.label_tag }}
+                        </label>
+                        <div class="col-sm-8">
+                            <label class="btn btn-outline-secondary" for="file-selector">
+                                {% render_field form.file style="display:none;" id="file-selector" %}
+                                Вибрати <i class="far fa-folder-open"></i>
+                            </label>
+                            <span class='label label-info' id="upload-file-info"></span>
+                            {% if form.file.errors %}
+                                {% for error in form.file.errors %}
+                                    <div class="invalid-field">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if form.file.help_text %}
+                                <small class="form-text text-muted">
+                                    {{ form.file.help_text|safe }}
+                                </small>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="{{ form.estimated_price.id_for_label }}" class="col-sm-2 col-form-label">
+                            {{ form.estimated_price.label_tag }}
+                        </label>
+                        <div class="col-sm-10">
+                            {% if form.estimated_price.errors %}
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="price-addon">&#8372;</span>
+                                    </div>
+                                    {% render_field form.estimated_price class="form-control is-invalid" aria-label="price" aria-describedby="price-addon" %}
+                                </div>
+                                {% for error in form.estimated_price.errors %}
+                                    <div class="invalid-field">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="price-addon">&#8372;</span>
+                                    </div>
+                                    {% render_field form.estimated_price class="form-control" aria-label="price" aria-describedby="price-addon" %}
+                                </div>
+                            {% endif %}
+
+                            {% if form.estimated_price.help_text %}
+                                <small class="form-text text-muted">{{ form.estimated_price.help_text|safe }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label for="{{ form.description.id_for_label }}" class="col-sm-2 col-form-label">
+                            {{ form.description.label_tag }}
+                        </label>
+                        <div class="col-sm-10">
+                            {% render_field form.description class="form-control" %}
+                            {% if form.description.help_text %}
+                                <small class="form-text text-muted">{{ form.description.help_text|safe }}</small>
+                            {% endif %}
+                            <small class="form-text text-muted">Залишилось символів:
+                                <span id="remaining-chars" class="text-info"></span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <button class="btn btn-outline-info btn-lg px-5 my-5 ml-auto" type="submit">
+                Створити <i class="fas fa-arrow-circle-right"></i>
+            </button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="{% static 'js/tag-it.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var languages = {{ languages|safe }};
+    </script>
+    <script src="{% static 'tasks/js/new-task.js' %}"></script>
+{% endblock %}

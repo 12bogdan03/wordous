@@ -1,0 +1,223 @@
+{% extends "accounts/base_accounts.html" %}
+{% load static %}
+
+{% load widget_tweaks %}
+
+{% block title %}Налаштування{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static "accounts/css/accounts.css" %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="py-4 text-center">Налаштування</h2>
+
+        {% if user_form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for error in user_form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if profile_form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for error in profile_form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form action="" method="post" {% if profile_form %}enctype="multipart/form-data"{% endif %}>
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="col-md-6">
+                    {% for field in user_form.visible_fields %}
+                        <div class="form-group row">
+                            <label for="{{ field.id_for_label }}" class="col-sm-4 col-form-label">
+                                {{ field.label_tag }}
+                            </label>
+                            <div class="col-sm-8">
+                                {% if field.errors %}
+                                    {% render_field field class="form-control is-invalid" %}
+                                    {% for error in field.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    {% render_field field class="form-control" %}
+                                {% endif %}
+
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">
+                                        {{ field.help_text|safe }}
+                                    </small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    {% if profile_form %}
+                        <div class="form-group row">
+                            <label for="{{ profile_form.languages.id_for_label }}" class="col-sm-4 col-form-label">
+                                {{ profile_form.languages.label_tag }}
+                            </label>
+                            <div class="col-sm-8">
+
+                                {% render_field profile_form.languages class="form-control" hidden="true" %}
+                                <ul id="langTags" class="tagit ui-widget ui-widget-content ui-corner-all"></ul>
+
+                                {% if profile_form.languages.help_text %}
+                                    <small class="form-text text-muted">
+                                        {{ profile_form.languages.help_text|safe }}
+                                    </small>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-6">
+                    {% if profile_form %}
+                        <img src="{{ profile_form.instance.photo.url }}" class="rounded-circle mx-auto d-block"
+                             width="150" height="150" alt="profile photo"/>
+
+                        <div class="text-center mt-1 mb-2">
+                            <label class="btn btn-light" for="id_photo">
+                                <input type="file" name="photo" id="id_photo" hidden>
+                                Змінити <i class="far fa-edit"></i>
+                            </label>
+                            <span class='label label-info' id="upload-file-info"></span>
+                        </div>
+                        {% if profile_form.photo.errors %}
+                            {% for error in profile_form.photo.errors %}
+                                <div class="invalid-feedback">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                    {% endif %}
+                    <div class="row">
+                        <button type="button" class="btn btn-outline-danger mx-auto" data-toggle="modal" data-target="#deleteModal">
+                            Видалити профіль <i class="far fa-trash-alt"></i>
+                        </button>
+                    </div>
+                    <div class="row">
+                        <a class="btn btn-outline-secondary mt-1 mx-auto" href="{% url 'accounts:password_change' %}" role="button">
+                            Змінити пароль <i class="fas fa-key"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% if profile_form %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label for="{{ profile_form.about.id_for_label }}" class="col-sm-2 col-form-label">
+                                {{ profile_form.about.label_tag }}
+                            </label>
+                            <div class="col-sm-10">
+                                {% render_field profile_form.about class="form-control" %}
+                                {% if profile_form.about.help_text %}
+                                    <small class="form-text text-muted">{{ profile_form.about.help_text|safe }}</small>
+                                {% endif %}
+                                <small class="form-text text-muted">Залишилось символів:
+                                    <span id="remaining-chars" class="text-info"></span>
+                                </small>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group row">
+                            <label for="{{ profile_form.card_number.id_for_label }}" class="col-md-4 col-form-label">
+                                {{ profile_form.card_number.label_tag }}
+                            </label>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="card-addon">
+                                            <i class="far fa-credit-card"></i>
+                                        </span>
+                                    </div>
+                                    {% render_field profile_form.card_number class="form-control" aria-describedby="card-addon" %}
+                                </div>
+
+                                {% if profile_form.card_number.help_text %}
+                                    <small class="form-text text-muted">{{ profile_form.card_number.help_text|safe }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="row">
+                <button type="submit" class="btn btn-success btn-lg mb-5 mx-auto">Зберегти</button>
+            </div>
+        </form>
+
+
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Підтвердження</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="lead mb-2">Впевнені, що хочете видалити профіль?</p>
+                        <p class="text-muted">Нам буде Вас не вистачати <i class="far fa-frown"></i></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Відмінити</button>
+                        <form action="{% url 'accounts:delete' request.user.pk %}" method="post">{% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Видалити </button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="{% static 'js/tag-it.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script>
+        $(document).ready(function(){
+            $('#id_photo').on('change', function() {
+                var fileName = $(this).val().split('\\').pop();
+                $('#upload-file-info').html(fileName);
+            });
+            {% if profile_form %}
+                $("#langTags").tagit({
+                    availableTags: {{ languages|safe }},
+                    caseSensitive: false,
+                    singleField: true,
+                    singleFieldNode: $('#id_languages')
+                });
+            {% endif %}
+            // characters remaining countdown
+            var maxLength = $("#id_about").attr("maxlength");
+            $('#remaining-chars').text(maxLength);
+            $("#id_about").keyup(function() {
+                var length = $(this).val().length;
+                var length = maxLength-length;
+                $('#remaining-chars').text(length);
+            });
+
+        });
+    </script>
+{% endblock %}

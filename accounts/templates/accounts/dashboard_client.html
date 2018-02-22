@@ -1,0 +1,147 @@
+<div class="col-4">
+    {% include 'accounts/dashboard_pagination.html' %}
+</div>
+<div class="col-8">
+    <div class="btn-group btn-group-sm pb-2 float-right
+                                    d-none d-md-inline-flex" role="group"
+         aria-label="status buttons">
+        {% for status in status_list %}
+            <a class="btn btn-outline-secondary {% if status.0 == selected_status %}active{% endif %}"
+               href="{% url 'accounts:dashboard' status.0 %}" role="button">
+                {{ status.1 }}
+            </a>
+        {% endfor %}
+        <a class="btn btn-outline-secondary {% if selected_status == 'all' %}active{% endif %}"
+           href="{% url 'accounts:dashboard' 'all' %}">
+            Всі
+        </a>
+    </div>
+    <div class="btn-group-vertical btn-group-sm pb-2
+                                    float-right d-inline-flex d-md-none"
+         role="group" aria-label="status buttons">
+        {% for status in status_list %}
+            <a class="btn btn-secondary {% if status.0 == selected_status %}active{% endif %}"
+               href="{% url 'accounts:dashboard' status.0 %}" role="button">
+                {{ status.1 }}
+            </a>
+        {% endfor %}
+        <a class="btn btn-secondary {% if selected_status == 'all' %}active{% endif %}"
+           href="{% url 'accounts:dashboard' 'all' %}">
+            Всі
+        </a>
+    </div>
+</div>
+
+
+<table class="table bg-white box-shadow table-responsive-md table-hover">
+    <thead class="box-shadow">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Файл</th>
+        <th scope="col">Тип</th>
+        <th scope="col">Статус</th>
+        <th scope="col">Вартість</th>
+        <th scope="col">Дедлайн</th>
+        <th scope="col">До кінця</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if task_list %}
+        {% for task in task_list %}
+            <tr>
+                <th scope="row"><a class="badge badge-pill badge-info" href="{{ task.get_absolute_url }}">{{ task.id }}</a></th>
+                <td><a href="{{ task.file.url }}">{{ task.file_name|truncatechars:20  }}</a></td>
+                <td>{{ task.get_kind_display }}</td>
+                <td><span class="badge badge-pill badge-secondary">{{ task.get_status_display }}</span></td>
+                <td>{% if task.estimated_price %}{{ task.estimated_price }} &#8372;{% endif %}</td>
+                <td>{% if task.deadline %}{{ task.deadline }}{% endif %}</td>
+                <td>{% if task.is_expired %}
+                    <span class="badge badge-danger">ТЕРМІНОВЕ</span>
+                {% else %}
+                    {{ task.deadline|timeuntil }}
+                {% endif %}
+                </td>
+
+                {% if task.status == 'nw' %}
+                    <td>
+                        <a class="disabled" data-toggle="tooltip" title="Оплата" href="#">
+                            <i class="far fa-credit-card"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a data-toggle="tooltip" title="Змінити" href="{% url 'tasks:task_update' task.id %}">
+                            <i class="far fa-edit"></i>
+                        </a>
+                    </td>
+                    <td>
+                            <span data-toggle="modal" data-target="#confirmDeleteModal">
+                                <a class="close-icon" data-toggle="tooltip" title="Видалити">
+                                    <i class="far fa-trash-alt"></i>
+                                </a>
+                            </span>
+                    </td>
+
+
+                    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Підтвердження</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Впевнені, що хочете видалити це завдання?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Відмінити</button>
+                                    <form action="{% url 'tasks:task_delete' task.id %}" method="post">{% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Видалити</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% elif task.status == "wff" %}
+                    <td>
+                        <a data-toggle="tooltip" title="Оплата" href="{% url 'payment:payment' task.pk %}">
+                            <i class="far fa-credit-card"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#" class="disabled"><i class="far fa-edit"></i></a>
+                    </td>
+                    <td>
+                        <a href="#" class="disabled"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                {% else %}
+                    <td>
+                        <a href="#" class="disabled"><i class="far fa-credit-card"></i></a>
+                    </td>
+                    <td>
+                        <a href="#" class="disabled"><i class="far fa-edit"></i></a>
+                    </td>
+                    <td>
+                        <a href="#" class="disabled"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                {% endif %}
+
+            </tr>
+        {% endfor %}
+
+    {% else %}
+        <tr>
+            <td align="center" colspan="10">
+                <p>Тут поки що пусто. </p>
+            </td>
+        </tr>
+    {% endif %}
+
+    </tbody>
+</table>
+

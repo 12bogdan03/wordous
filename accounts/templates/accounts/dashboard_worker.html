@@ -1,0 +1,90 @@
+<div class="col-4">
+    {% include 'accounts/dashboard_pagination.html' %}
+</div>
+<div class="col-8">
+    <div class="btn-group btn-group-sm pb-2 float-right
+                                    d-none d-md-inline-flex" role="group"
+         aria-label="status buttons">
+        {% for status in status_list|slice:"1:" %}
+            <a class="btn btn-outline-secondary {% if status.0 == selected_status %}active{% endif %}"
+               href="{% url 'accounts:dashboard' status.0 %}" role="button">
+                {{ status.1 }}
+            </a>
+        {% endfor %}
+        <a class="btn btn-outline-secondary {% if selected_status == 'all' %}active{% endif %}"
+           href="{% url 'accounts:dashboard' 'all' %}">
+            Всі
+        </a>
+    </div>
+    <div class="btn-group-vertical btn-group-sm pb-2
+                                    float-right d-inline-flex d-md-none"
+         role="group" aria-label="status buttons">
+        {% for status in status_list %}
+            <a class="btn btn-secondary {% if status.0 == selected_status %}active{% endif %}"
+               href="{% url 'accounts:dashboard' status.0 %}" role="button">
+                {{ status.1 }}
+            </a>
+        {% endfor %}
+        <a class="btn btn-secondary {% if selected_status == 'all' %}active{% endif %}"
+           href="{% url 'accounts:dashboard' 'all' %}">
+            Всі
+        </a>
+    </div>
+</div>
+
+
+<table class="table bg-white box-shadow table-responsive-md table-hover">
+    <thead class="box-shadow">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Тип</th>
+        <th scope="col">Статус</th>
+        <th scope="col">Вартість</th>
+        <th scope="col">Дедлайн</th>
+        <th scope="col">До кінця</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if task_list %}
+        {% for task in task_list %}
+            <tr>
+                <th scope="row"><a class="badge badge-pill badge-info" href="{{ task.get_absolute_url }}">{{ task.id }}</a></th>
+                <td>{{ task.get_kind_display }}</td>
+                <td><span class="badge badge-pill badge-secondary">{{ task.get_status_display }}</span></td>
+                <td>{% if task.estimated_price %}{{ task.estimated_price }} &#8372;{% endif %}</td>
+                <td>{% if task.deadline %}{{ task.deadline }}{% endif %}</td>
+                <td>{% if task.is_expired %}
+                    <span class="badge badge-danger">ТЕРМІНОВЕ</span>
+                {% else %}
+                    {{ task.deadline|timeuntil }}
+                {% endif %}
+                </td>
+                <td>
+                    {% if task.status == 'ip' %}
+                        <a class="btn btn-outline-info btn-sm"
+                           href="{% url 'tasks:task_execute' task.id %}"
+                           role="button">
+                            Виконати
+                        </a>
+                    {% else %}
+                        <a class="btn btn-outline-info disabled btn-sm" aria-disabled="true"
+                           role="button">
+                            Виконати
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+
+    {% else %}
+        <tr>
+            <td align="center" colspan="10">
+                <p>Тут поки що пусто. </p>
+            </td>
+        </tr>
+    {% endif %}
+
+    </tbody>
+</table>
+

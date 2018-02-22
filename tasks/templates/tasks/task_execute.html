@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load accounts_extras %}
+{% load widget_tweaks %}
+
+{% block title %}Завдання #{{ task.id }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row p-2 my-3">
+            <div class="col-md-10">
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <h2>#{{ task.id }} <span class="badge badge-secondary">
+                                    {% if task.estimated_price %}
+                                        {{ task.estimated_price }} &#8372;
+                                    {% else %}
+                                        вартість не вказано
+                                    {% endif %}</span>
+                            </h2>
+                            <small class="ml-2 text-muted align-self-center"><i class="far fa-clock"></i> {{ task.created }}</small>
+                        </div>
+                    </div>
+
+                </div>
+                <hr>
+
+                <div class="row mb-2">
+                    <div class="col-md-1">
+                        <p><strong>Тип:</strong></p>
+                    </div>
+                    <div class="col-md-2">
+                        <p><span class="badge badge-light">{{ task.get_kind_display }}
+                            {% if task.kind == 'ed' %}
+                                <i class="fas fa-pencil-alt"></i>
+                            {% else %}
+                                <i class="fas fa-exchange-alt"></i>
+                            {% endif %}
+                        </span></p>
+                    </div>
+
+
+                    <div class="col-md-1">
+                        <p><strong>Статус:</strong></p>
+                    </div>
+                    <div class="col-md-2">
+                        <p>{{ task.get_status_display }}</p>
+                    </div>
+
+
+                    <div class="col-md-1">
+                        <p><strong>Створив:</strong></p>
+                    </div>
+                    <div class="col-md-2">
+                        <p>{{ task.creator.first_name }} {{ task.creator.last_name }}</p>
+                    </div>
+
+                    <div class="col-md-1">
+                        <p><strong>Мова:</strong></p>
+                    </div>
+                    <div class="col-md-2">
+                        <p><span class="badge badge-secondary">{{ task.language }}</span></p>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    {% if task.translation_language %}
+                        <div class="col-md-3">
+                            <p><strong>Мова перекладу:</strong></p>
+                        </div>
+                        <div class="col-md-3">
+                            <p><span class="badge badge-info">{{ task.translation_language }}</span></p>
+                        </div>
+                    {% endif %}
+
+                    <div class="col-md-2">
+                        <p><strong>Дедлайн <i class="fas fa-stopwatch"></i>:</strong></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p {% if task.is_expired %}class="text-danger"{% endif %}>{{ task.deadline }}</p>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <p><strong>Виконавець:</strong> {% if task.executor %}
+                            <a href="{% url 'accounts:executor_detail' task.executor.id %}">{{ task.executor.first_name }} {{ task.executor.last_name }}</a>
+                        {% else %}
+                            немає.
+                        {% endif %}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Файл <i class="far fa-file-alt"></i>:</strong> <a href="{{ task.file.url }}">{{ task.file_name }}</a></p>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-md-8">
+                        <p><strong>Опис:</strong> {% if task.description %}
+                            {{ task.description }}
+                        {% else %}
+                            не вказано.
+                        {% endif %}</p>
+                    </div>
+                </div>
+                <hr>
+
+                <form action="{% url 'tasks:task_execute' task.id %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label for="{{ form.solution_file.id_for_label }}" class="col-sm-4 col-form-label">
+                                    <strong>{{ form.solution_file.label_tag }}</strong>
+                                </label>
+                                <div class="col-sm-8">
+                                    <label class="btn btn-outline-secondary" for="file-selector">
+                                        {% render_field form.solution_file style="display:none;" id="file-selector" %}
+                                        Вибрати <i class="far fa-folder-open"></i>
+                                    </label>
+                                    <span class='label label-info' id="upload-file-info"></span>
+                                    {% if form.solution_file.errors %}
+                                        {% for error in form.solution_file.errors %}
+                                            <div class="invalid-field">
+                                                {{ error }}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    {% if form.solution_file.help_text %}
+                                        <small class="form-text text-muted">
+                                            {{ form.solution_file.help_text|safe }}
+                                        </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button class="btn btn-success btn-lg btn-block" type="submit">
+                                Завершити <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+
+
+
+            </div>
+            <div class="col-md-2 bg-secondary">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function(){
+            $('#file-selector').on('change', function() {
+                var fileName = $(this).val().split('\\').pop();
+                $('#upload-file-info').html(fileName);
+            });
+        });
+    </script>
+{% endblock %}

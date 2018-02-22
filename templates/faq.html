@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    FAQ
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid px-3 mt-4">
+        <div class="row">
+            <div class="col-md-10">
+                <h2 class="pb-3">Часті запитання</h2>
+                <div id="accordion">
+                    <div class="card card-hover-shadow my-2">
+                        <div class="card-header faq-question" id="heading1">
+                            <h5 class="mb-0">
+                                <a data-toggle="collapse" data-target="#collapse1"
+                                        aria-expanded="true" aria-controls="collapse1">
+                                    Чи потрібно платити за створення завдань?
+                                </a>
+                            </h5>
+                        </div>
+
+                        <div id="collapse1" class="collapse collapsed" aria-labelledby="heading1" data-parent="#accordion">
+                            <div class="card-body">
+                                Ні. Це абсолютно безкоштовно. Ви оплачуєте лише виконання завдання виконавцеві.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-hover-shadow my-2">
+                        <div class="card-header faq-question" id="heading2">
+                            <h5 class="mb-0">
+                                <a data-toggle="collapse" data-target="#collapse2"
+                                        aria-expanded="false" aria-controls="collapse2">
+                                    Що робити, якщо моє завдання довго не беруть до роботи?
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#accordion">
+                            <div class="card-body">
+                                Варто спробувати підняти його вартість. Найчастіше не беруть до роботи складні і
+                                малооплачувані завдання.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-hover-shadow my-2">
+                        <div class="card-header faq-question" id="heading3">
+                            <h5 class="mb-0">
+                                <a data-toggle="collapse" data-target="#collapse3"
+                                        aria-expanded="false" aria-controls="collapse3">
+                                    Моє завдання виконане. Де я можу переглянути прев'ю результату?
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="collapse3" class="collapse" aria-labelledby="heading3" data-parent="#accordion">
+                            <div class="card-body">
+                                ~10% виконаного завдання доступно на сторінці самого завдання.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-hover-shadow my-2">
+                        <div class="card-header faq-question" id="heading4">
+                            <h5 class="mb-0">
+                                <a data-toggle="collapse" data-target="#collapse4"
+                                        aria-expanded="false" aria-controls="collapse4">
+                                    Як довго виконані завдання зберігаються на сервері?
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="collapse4" class="collapse" aria-labelledby="heading4" data-parent="#accordion">
+                            <div class="card-body">
+                                Завдання автоматично видаляються через 30 днів з моменту їх виконання.
+                                Тому краще не зволікати із завантаженням результатів на свій комп'ютер.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 bg-secondary">
+            </div>
+        </div>
+    </div>
+{% endblock %}

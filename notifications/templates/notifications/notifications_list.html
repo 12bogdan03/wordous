@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Сповіщення{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row p-2 my-3">
+            <div class="col-md-10 pr-md-5">
+                <div class="jumbotron py-3 text-center">
+                    <h4>Історія сповіщень</h4>
+                    <p>Клікніть на сповіщення, щоб перейти до його завдання.</p>
+                    <small class="text-muted">(всі сповіщення автоматично видаляються через 7 днів з моменту створення)</small>
+                </div>
+                {% for notification in notification_list %}
+                    <a href="{{ notification.task.get_absolute_url }}" style="text-decoration: none;">
+                        <div class="alert alert-primary alert-hoverable" role="alert">
+                            <div class="row alert-heading">
+                                <div class="col-md-8">
+                                    <h5>{{ notification.title }}</h5>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="small float-right text-muted">
+                                        <i class="far fa-clock"></i> {{ notification.created|date:"SHORT_DATETIME_FORMAT" }}
+                                    </span>
+                                </div>
+                            </div>
+                            <hr>
+                            <p>{{ notification.text }}</p>
+                        </div>
+                    </a>
+                {% empty %}
+                    <p class="text-center my-3">Поки що у Вас немає сповіщень.</p>
+                {% endfor %}
+
+                {% include 'pagination.html' %}
+            </div>
+
+            <div class="col-md-2 bg-secondary">
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+{% load accounts_extras %}
+
+{% block title %}Завдання{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row my-4">
+            <div class="col-md-10">
+                <div class="d-flex flex-wrap">
+                    <div class="d-inline-flex">
+                        <div class="btn-group btn-group-sm ml-3 mb-2 mr-2" role="group">
+                            <a class="btn btn-outline-secondary {% if selected_kind == 'all' %}active{% endif %}"
+                               href="{% url 'tasks:task_list' 'all' %}?{% for key, value in request.GET.items %}&{{ key }}={{ value }}{% endfor %}">
+                                Всі
+                            </a>
+                            {% for kind in kind_list %}
+                                <a class="btn btn-outline-secondary {% if kind.0 == selected_kind %}active{% endif %}"
+                                   href="{% url 'tasks:task_list' kind.0 %}?{% for key, value in request.GET.items %}&{{ key }}={{ value }}{% endfor %}" role="button">
+                                    {{ kind.1 }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="d-inline-flex">
+                        <form action="" method="get">
+                            <div class="input-group input-group-sm mb-2 ml-3">
+                                <input id="searchbox" name="q" type="text" class="form-control"
+                                        {% if request.GET.q %}
+                                            value="{{ request.GET.q }}"
+                                        {% else %}
+                                            placeholder="Пошук за мовою"
+                                        {% endif %}
+                                       aria-label="language" aria-describedby="search-addon">
+
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-success" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap">
+                    {% for task in task_list %}
+                        <div class="card border-info active-card m-3" style="min-width: 18rem;">
+                            <div class="card-header">
+                                <h5 class="mb-0">Завдання #{{ task.id }}
+                                    {% if task.is_expired %}
+                                        <span class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                                    {% endif %}
+                                    {% if task.estimated_price %}
+                                        <span class="badge badge-secondary">{{ task.estimated_price }} &#8372;</span>
+                                    {% endif %}
+                                </h5>
+                                <small class="text-muted">
+                                    <i class="far fa-clock"></i> {{ task.created }}
+                                </small>
+                            </div>
+                            <div class="card-body">
+                                {{ task.get_kind_display }}
+                                {% if task.kind == 'ed' %}
+                                    <i class="fas fa-pencil-alt"></i>
+                                {% else %}
+                                    <i class="fas fa-exchange-alt"></i>
+                                {% endif %}
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item list-group-item-action py-1 {% if task.is_expired %}list-group-item-danger{% endif %}">
+                                    <small class="text-muted">Дедлайн</small><br>
+                                    <i class="fas fa-stopwatch"></i> {{ task.deadline }}
+                                </li>
+                                <li class="list-group-item list-group-item-action py-1">
+                                    <small class="text-muted">Мова оригіналу</small><br>
+                                    <i class="fas fa-language"></i> {{ task.language }}
+                                </li>
+                                {% if task.translation_language %}
+                                    <li class="list-group-item list-group-item-action py-1">
+                                        <small class="text-muted">Мова перекладу</small><br>
+                                        <i class="fas fa-globe"></i> {{ task.translation_language }}
+                                    </li>
+                                {% endif %}
+                            </ul>
+                            <div class="card-footer">
+                                <a href="{{ task.get_absolute_url }}" class="btn btn-primary">
+                                    Деталі <i class="fas fa-info-circle"></i>
+                                </a>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="jumbotron w-100">
+                            <p class="text-center">Завдань немає.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% include 'pagination.html' %}
+            </div>
+            <div class="col-md-2 mb-2 bg-secondary">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
