@@ -13,11 +13,6 @@
     <meta name="msapplication-TileColor" content="#2b5797">
     <meta name="theme-color" content="#ffffff">
     <title>{% block title %}{% endblock %}</title>
-    <script type="text/javascript"> //<![CDATA[
-    var tlJsHost = ((window.location.protocol == "https:") ? "https://secure.comodo.com/" : "http://www.trustlogo.com/");
-    document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/trustlogo.js' type='text/javascript'%3E%3C/script%3E"));
-    //]]>
-    </script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Supermercado+One" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
@@ -44,10 +39,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
-    <script language="JavaScript" type="text/javascript">
-        TrustLogo("https://wordous.me/static/img/comodo_secure_seal.png", "CL1", "none");
-    </script>
-    <a href="https://www.positivessl.com/" id="comodoTL">Positive SSL</a>
     <script src="{% static 'js/main.js' %}"></script>
     {% if request.user.is_authenticated %}
         <script src="{% static 'notifications/js/notifications.js' %}"></script>
