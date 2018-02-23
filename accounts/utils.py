@@ -10,7 +10,7 @@ from .tokens import account_activation_token
 def send_activation_email(request, user):
     current_site = get_current_site(request)
     protocol = 'https' if request.is_secure() else 'http'
-    subject = 'Wordous. Account Activation'
+    subject = 'Wordous. Активація акаунта'
     message = render_to_string('accounts/account_activation_email.html', {
         'user': user,
         'protocol': protocol,
