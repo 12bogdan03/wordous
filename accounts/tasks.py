@@ -11,7 +11,7 @@ logger = get_task_logger(__name__)
 def send_activation_email_task(request, user_id):
     """creates notification for user"""
 
-    user = User.objects.filter(pk=user_id)
+    user = User.objects.get(pk=user_id)
 
     logger.info("Sent activation email for user '{}'".format(user.username))
 
