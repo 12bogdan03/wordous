@@ -1,7 +1,12 @@
 {% autoescape off %}
-    Вітаємо {{ user.firstname }} {{ user.lastname }} !
+    Вітаємо {{ user.first_name }} {{ user.last_name }} !
 
     Перейдіть за цим посиланням для завершення реєстрації:
 
     {{ protocol }}://{{ domain }}{% url 'accounts:account_activation_confirm' uidb64=uid token=token %}
+
+    Проіноруйте цей email, якщо Ви не намагалися зареєструватися на {{ protocol }}://{{ domain }}
+
+    З повагою,
+    Wordous
 {% endautoescape %}
