@@ -136,6 +136,9 @@ LOGOUT_URL = reverse_lazy('accounts:logout')
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 STATIC_ROOT = '/home/deodatus/static/'
 
 MEDIA_URL = '/media/'
