@@ -1,10 +1,14 @@
 $(document).ready(function(){
     $("label[id=Worker]").click(function(){
         $("#profile_form").slideDown('200ms');
+        $("#id_languages").prop('required', true);
+        $("#id_card_number").prop('required', true);
     });
 
     $("label[id=Client]").click(function(){
         $("#profile_form").slideUp('200ms');
+        $("#id_languages").prop('required', false);
+        $("#id_card_number").prop('required', false);
     });
 
     // check passwords match
