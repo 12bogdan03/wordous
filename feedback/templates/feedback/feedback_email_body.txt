@@ -2,4 +2,4 @@
 Від: {{email}}
 ----------
 
-{{message|linebreaks}}
+{{message|linebreaks|striptags}}

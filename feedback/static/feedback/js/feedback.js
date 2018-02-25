@@ -12,7 +12,6 @@ $(document).ready(function(){
 
             success : function(result) {
                 if (result) {
-                    $("#feedback-body").addClass('row h-100 justify-content-center align-items-center');
                     $('.circle-loader').toggleClass('load-complete');
                     $('.checkmark').toggle();
                 } else {
@@ -27,7 +26,8 @@ $(document).ready(function(){
     form.on('submit', function(event){
         event.preventDefault();
         sendFeedback();
-        $("#feedback-body").html(sentAnimationDiv);
+        $("#feedback-body").html(sentAnimationDiv).addClass('row h-100 justify-content-center align-items-center');
+        $("#feedback-footer").hide();
     });
 
 });
