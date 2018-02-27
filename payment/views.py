@@ -45,7 +45,11 @@ class PaymentCallbackView(View):
         sign = liqpay.str_to_sign(settings.LIQPAY_PRIVATE_KEY + data + settings.LIQPAY_PRIVATE_KEY)
         if sign == signature:
             response = liqpay.decode_data_from_str(data)
-            if response['status'] == 'sandbox':
+            if settings.LIQPAY_SANDBOX_MODE:
+                expected_status = 'sandbox'
+            else:
+                expected_status = 'success'
+            if response['status'] == expected_status:
                 task = Task.objects.get(pk=int(response['order_id']))
                 task.status = Task.DONE
                 task.save()
