@@ -20,7 +20,7 @@
                 embedTo: "#liqpay_checkout",
                 mode: "embed" // embed || popup,
             }).on("liqpay.callback", function(data){
-                if (data.status === 'sandbox') {;
+                if (data.status === 'success') {
                     var url = $("input[name=taskDetailRedirectUrl]").val();
                     window.location.replace(url);
                 }
