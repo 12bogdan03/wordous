@@ -9,7 +9,7 @@ docx2txt==0.6
 idna==2.6
 kombu==4.1.0
 liqpay-python==1.0
-lxml==4.1.1
+lxml==4.6.3
 Pillow==5.0.0
 psycopg2==2.7.3.2
 python-decouple==3.1
